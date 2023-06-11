@@ -1,0 +1,158 @@
+
+body {
+   background-color: navy;
+  background-image: url(./images/backgroung_stars1.jpg);
+  background-repeat: repeat-y;
+  background-size: cover;
+}
+ 
+/* MY CSS */
+.dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+#app-name {
+  color: rgb(121,124,146);
+}
+
+#form {
+  border: none;
+}
+
+.input-label {
+  padding: 10px;
+  color: rgb(56,202,240)
+}
+
+.input-error {
+  padding: 10px;
+  color: rgb(246, 6, 54);
+}
+
+.dashboard-item {
+  margin: 10px;
+}
+
+.dashboard-heading {
+  min-height: 40px;
+}
+
+.dashboard-input-search {
+  min-height: 50px;
+
+}
+
+.photo-container {
+  position: relative;
+  display: inline-block;
+}
+
+.photo-container-border {
+  border: 4px solid rgb(255, 47, 175);
+  border-radius: 0.5rem;
+}
+
+/*group image icon */
+
+.icon-container {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+.icon-container > svg {
+  height: 1.3rem;
+  width: 1.3rem;
+  cursor: pointer;
+  color: pink;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  border-radius: 50%;
+  transition-duration: 250ms;
+  transition-property: height, width, background-color;
+  transition-timing-function: ease-in;
+}
+
+.icon-container > svg:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  height: 2rem;
+  width: 2rem;
+}
+
+/* enlarge image icon */
+.icon-container-enlarge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+}
+.icon-container-enlarge > svg {
+  height: 2rem;
+  width: 2rem;
+  color: pink;
+  background-color: rgba(0, 0, 0, 0.5);
+  size: 50px;
+  padding: 5px;
+  border-radius: 10%;
+  transition-duration: 150ms;
+  transition-property: height, width, background-color;
+  transition-timing-function: ease-in;
+}
+
+.icon-container-enlarge > svg:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  height: 2.2rem;
+  width: 2.2rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  display: inline-block;
+  object-position: center; /*lazyLoading */
+  object-fit: cover; /*lazyLoading */
+}
+
+
+
+.lazy-load {/*lazyLoading */
+  background-size: cover;
+  background-position: center;
+}
+
+/* Main CSS */
+.grid-wrapper > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.grid-wrapper > div > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.grid-wrapper {
+  margin: 15px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-auto-rows: 200px;
+  grid-auto-flow: dense;
+}
+.grid-wrapper .wide {
+  grid-column: span 2;
+}
+.grid-wrapper .tall {
+  grid-row: span 2;
+}
+.grid-wrapper .big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
