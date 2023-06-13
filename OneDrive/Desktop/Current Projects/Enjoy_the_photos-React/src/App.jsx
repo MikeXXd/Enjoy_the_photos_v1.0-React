@@ -13,14 +13,18 @@ const App = () => {
     if (getGalery == null || undefined) return [];
     return JSON.parse(getGalery);
   });
-  const [result, setResult] = useState([]);
+  const [activatedGalery, setActivatedGalery] = useState(false);
+  const [results, setResults] = useState([]);
   const [isInputError, setInputError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [previousSearch, setPreviouSearch] = useState([]);
   const [pageNo, setPageNo] = useState(1);
 
-  console.log("result", result);
+  console.log("results", results);
   console.log("galery: ", galery);
+  console.log("active galery", activatedGalery);
+
+
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(galery));
   }, [galery]);
@@ -33,7 +37,7 @@ const App = () => {
       query +
       "&client_id=" +
       clientId;
-    return axios.get(url).then((res) => setResult(res.data.results));
+    return axios.get(url).then((res) => setResults(res.data.results));
   }
 
   const handleSubmit = (e) => {
@@ -47,6 +51,8 @@ const App = () => {
         if (inputRef.current.value == "") {
           setInputError("Please write a word for query");
         } else {
+          setActivatedGalery(false);
+          setResults([]);
           setPageNo(1);
           setInputError(false);
           setIsLoading(true);
@@ -58,9 +64,19 @@ const App = () => {
 
         break;
       case "nextQuery":
+        setActivatedGalery(false);
+        setResults([]);
         setIsLoading(true);
         setInputError(false);
         getAxios(pageNo, previousSearch[0]);
+        setIsLoading(false);
+        setPageNo((current) => current + 1);
+        break;
+      case "galery":
+        setActivatedGalery(true);
+        setIsLoading(true);
+        setInputError(false);
+        setResults(galery);
         setIsLoading(false);
         setPageNo((current) => current + 1);
         break;
@@ -78,21 +94,25 @@ const App = () => {
         <SearchForm
           handleSubmit={handleSubmit}
           inputRef={inputRef}
-          result={result}
+          results={results}
           isInputError={isInputError}
           isLoading={isLoading}
           previousSearch={previousSearch}
+          galery={galery}
+          activatedGalery={activatedGalery}
         />
       </div>
 
       <div className="grid-wrapper ">
-        {result.map((photo) => {
+        {results.map((photo) => {
           return (
             <RenderPhoto
               key={photo.id}
               photo={photo}
               galery={galery}
               setGalery={setGalery}
+              activatedGalery={activatedGalery}
+              setActivatedGalery={setActivatedGalery}
             />
           );
         })}

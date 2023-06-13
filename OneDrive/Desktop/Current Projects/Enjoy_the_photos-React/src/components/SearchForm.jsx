@@ -3,34 +3,34 @@ import { useEffect } from "react";
 export function SearchForm({
   handleSubmit,
   inputRef,
-  result,
+  results,
   isInputError,
   isLoading,
   previousSearch,
+  galery,
+  activatedGalery
 }) {
-
-
   useEffect(() => {
     inputRef.current.value = "";
-  }, [result]);
+  }, [results]);
 
   return (
     <>
       <div className="dashboard-item dashboard-input-search ">
-        <form onSubmit={handleSubmit} >
+        <form onSubmit={handleSubmit}>
           <div className="input-group form-control bg-dark" id="form">
             {isInputError ? (
               <label htmlFor="inputQuery" className="input-error">
                 {isInputError}
               </label>
-            ) : previousSearch[0] !== undefined ? (
+            ) : previousSearch[0] !== undefined || activatedGalery ? (
               <label htmlFor="inputQuery" className="input-label">
-                Current search of: <strong>{previousSearch[0]} </strong>
+                {activatedGalery ? (<strong> Your GALERY</strong>) : (<span>Current search of: <strong> {previousSearch[0]} </strong></span>)}
               </label>
             ) : undefined}
 
             <input
-            autoFocus
+              autoFocus
               className="btn btn-outline-info input-search"
               id="inputQuery"
               type="text"
@@ -46,6 +46,10 @@ export function SearchForm({
             <button className="btn btn-outline-info" type="submit" name="query">
               Search
             </button>
+            {galery.length > 0 ? <button className={`btn btn-outline-info ${activatedGalery && "active"}`}  type="submit" name="galery">
+              GALERY
+            </button> : undefined}
+
             {previousSearch.length > 0 ? (
               <button
                 type="onSubmit"
