@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import "./styles.css";
 import "bootstrap/dist/css/bootstrap.css";
+import "./styles.css";
 // import 'bootstrap/dist/css/bootstrap.mint.css'
 
 ReactDOM.createRoot(document.getElementById("root")).render(

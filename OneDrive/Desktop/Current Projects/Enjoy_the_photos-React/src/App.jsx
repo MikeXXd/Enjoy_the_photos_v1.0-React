@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { baseUrl, clientId } from "./api/clientId";
 import { SearchForm } from "./components/SearchForm";
 import { RenderPhoto } from "./components/RenderPhoto";
+import { FaUnsplash } from "react-icons/fa";
 
 const LOCAL_STORAGE_KEY = "Enjoy_the_photo_galery";
 
@@ -16,20 +17,23 @@ const App = () => {
   const [activatedGalery, setActivatedGalery] = useState(false);
   const [results, setResults] = useState([]);
   const [isInputError, setInputError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [previousSearch, setPreviouSearch] = useState([]);
+  const [isError, setIsError] = useState("");
+  const [previousSearch, setPreviouSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
 
-  console.log("results", results);
+  console.log("results set to ", results);
   console.log("galery: ", galery);
   console.log("active galery", activatedGalery);
-
 
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(galery));
   }, [galery]);
 
-  function getAxios(pageNo, query) {
+
+  function getData(pageNo, query) {
+    const controller = new AbortController();
+    const signal = controller.signal;
+  
     const url =
       baseUrl +
       pageNo +
@@ -37,11 +41,34 @@ const App = () => {
       query +
       "&client_id=" +
       clientId;
-    return axios.get(url).then((res) => setResults(res.data.results));
+  
+    return axios
+      .get(url, {
+        signal,
+      })
+      .then((res) => {
+        const results = res.data.results;
+        setResults(results);
+        if (results.length === 0) {
+          setIsError('no result for search of "' + query + '"');
+          setPreviouSearch("")
+        }
+      })
+      .catch((error) => {
+        if (error.name === "AbortError") {
+          console.log("Request aborted:", error.message);
+        } else {
+          setIsError(error.message);
+          console.log(error.message);
+        }
+      });
   }
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setInputError(false);
+    setIsError("");
 
     const clickedButton = e.nativeEvent.submitter;
     const buttonName = clickedButton.getAttribute("name");
@@ -54,30 +81,21 @@ const App = () => {
           setActivatedGalery(false);
           setResults([]);
           setPageNo(1);
-          setInputError(false);
-          setIsLoading(true);
-          getAxios(pageNo, inputRef.current.value);
-          setIsLoading(false);
+          getData(pageNo, inputRef.current.value, setResults, setIsError);
           setPageNo((current) => current + 1);
-          setPreviouSearch((current) => [inputRef.current.value, ...current]);
+          setPreviouSearch(inputRef.current.value);
         }
 
         break;
       case "nextQuery":
         setActivatedGalery(false);
         setResults([]);
-        setIsLoading(true);
-        setInputError(false);
-        getAxios(pageNo, previousSearch[0]);
-        setIsLoading(false);
+        getData(pageNo, previousSearch, setResults, setIsError);
         setPageNo((current) => current + 1);
         break;
       case "galery":
         setActivatedGalery(true);
-        setIsLoading(true);
-        setInputError(false);
         setResults(galery);
-        setIsLoading(false);
         setPageNo((current) => current + 1);
         break;
       default:
@@ -89,20 +107,30 @@ const App = () => {
     <>
       <div className="dashboard">
         <div className="dashboard-item dashboard-heading">
-          <h1 id="app-name">Enjoy the photos</h1>
+          <div className="app-name">
+            <h1>Enjoy the photos</h1>
+            <span>
+              powered by{""}
+              <a href="https://unsplash.com/">
+                <FaUnsplash size="20" /> Unsplash
+              </a>
+            </span>
+          </div>
         </div>
         <SearchForm
           handleSubmit={handleSubmit}
           inputRef={inputRef}
+          isError={isError}
           results={results}
           isInputError={isInputError}
-          isLoading={isLoading}
           previousSearch={previousSearch}
           galery={galery}
           activatedGalery={activatedGalery}
         />
       </div>
-
+      {isError && (
+        <h2 style={{ color: "red", textAlign: "center" }}>{isError}</h2>
+      )}
       <div className="grid-wrapper ">
         {results.map((photo) => {
           return (
@@ -111,8 +139,7 @@ const App = () => {
               photo={photo}
               galery={galery}
               setGalery={setGalery}
-              activatedGalery={activatedGalery}
-              setActivatedGalery={setActivatedGalery}
+              results={results}
             />
           );
         })}
@@ -122,3 +149,36 @@ const App = () => {
 };
 
 export default App;
+
+function getData(pageNo, query, dataCallback, errorCallback) {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const url =
+    baseUrl +
+    pageNo +
+    "&per_page=15&query=" /* photos per page */ +
+    query +
+    "&client_id=" +
+    clientId;
+
+  return axios
+    .get(url, {
+      signal,
+    })
+    .then((res) => {
+      const results = res.data.results;
+      dataCallback(results);
+      if (results.length === 0) {
+        errorCallback('no result for search of "' + query + '"');
+      }
+    })
+    .catch((error) => {
+      if (error.name === "AbortError") {
+        console.log("Request aborted:", error.message);
+      } else {
+        errorCallback(error.message);
+        console.log(error.message);
+      }
+    });
+}

@@ -5,7 +5,6 @@ export function SearchForm({
   inputRef,
   results,
   isInputError,
-  isLoading,
   previousSearch,
   galery,
   activatedGalery
@@ -23,9 +22,9 @@ export function SearchForm({
               <label htmlFor="inputQuery" className="input-error">
                 {isInputError}
               </label>
-            ) : previousSearch[0] !== undefined || activatedGalery ? (
+            ) : previousSearch !== "" || activatedGalery ? (
               <label htmlFor="inputQuery" className="input-label">
-                {activatedGalery ? (<strong> Your GALERY</strong>) : (<span>Current search of: <strong> {previousSearch[0]} </strong></span>)}
+                {activatedGalery ? (<strong> Your GALERY</strong>) : (<span>Current search of: <strong> {previousSearch} </strong></span>)}
               </label>
             ) : undefined}
 
@@ -36,7 +35,7 @@ export function SearchForm({
               type="text"
               name="photo"
               placeholder={
-                previousSearch[0] !== undefined
+                previousSearch !== ""
                   ? "search another photos"
                   : "search for photos"
               }
@@ -50,17 +49,16 @@ export function SearchForm({
               GALERY
             </button> : undefined}
 
-            {previousSearch.length > 0 ? (
+            {previousSearch !== "" ? (
               <button
                 type="onSubmit"
                 name="nextQuery"
                 className="btn btn-outline-info"
               >
-                {"more of " + previousSearch[0]}
+                {"more of " + previousSearch}
               </button>
             ) : undefined}
           </div>
-          {isLoading && <h2>Is loading...</h2>}
         </form>
       </div>
     </>
