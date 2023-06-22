@@ -1,6 +1,8 @@
 project name: "Enjoy the photos" version 1.0 (original name was "3yourself")
-Created by Michal Viliš, Frýdlant nad Ostarvicí, mike3d@seznam.cz, in June 2023
-This is my first React project which I made on my own.
-Based on Unsplash.com API
-it cannot go into production without unsplash.com acceptance.
+in production deployed at https://enjoythephotos.netlify.app/
 
+Created by Michal Viliš, Frýdlant nad Ostarvicí, mike3d@seznam.cz, in June 2023
+
+This is my first React idea=>project which I made on my own.... :-) happy
+
+Based on Unsplash.com API

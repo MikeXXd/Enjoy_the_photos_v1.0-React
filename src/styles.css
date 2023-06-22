@@ -1,6 +1,6 @@
 body {
-  background-color: navy;
-  background-image: url(./images/backgroung_stars1.jpg);
+  background-color: rgb(4, 4, 22);
+  background-image: url(./images/backgroung_stars2.jpg);
   background-repeat: repeat-y;
   background-size: cover;
 }

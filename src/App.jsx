@@ -21,8 +21,8 @@ const App = () => {
   const [previousSearch, setPreviouSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
 
-  console.log("results: ", results);
-  console.log("galery: ", galery);
+  // console.log("results: ", results);
+  // console.log("galery: ", galery);
 
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(galery));
@@ -36,7 +36,7 @@ const App = () => {
     const url =
       baseUrl +
       pageNo +
-      "&per_page=15&query=" /* photos per page */ +
+      "&per_page=21&query=" /* photos per page */ +
       query +
       "&client_id=" +
       clientId;
